@@ -1,22 +1,26 @@
-
+// A list of Kanji to use for the exercises is defined in kanji_data.js
 let currentExerciseIndex = 0;
 
-// Get references to HTML elements
+// Get references to HTML elements from kanji.html
 const exerciseContainer = document.getElementById('exercise-container');
+const modalOverlay = document.getElementById('modal-overlay');
+const restartButton = document.getElementById('restart-button');
 
 function displayExercise() {
     // Clear any previous exercise content
     exerciseContainer.innerHTML = '';
 
-    const current = exercises[currentExerciseIndex];
+    // Get the current exercise from our list
+    const current = kanjiExercises[currentExerciseIndex];
 
+    // Create the HTML structure for the exercise card
     const exerciseCard = document.createElement('div');
     exerciseCard.className = 'exercise-card';
 
-    // Add the story paragraph
-    const passage = document.createElement('p');
-    passage.className = 'question';
-    passage.textContent = current.passage;
+    // Add the question (Kanji)
+    const question = document.createElement('p');
+    question.className = 'question';
+    question.textContent = current.kanji;
 
     // Add the prompt to tell the user what to type
     const promptMessage = document.createElement('p');
@@ -28,7 +32,7 @@ function displayExercise() {
     const inputField = document.createElement('input');
     inputField.type = 'text';
     inputField.id = 'answer-input';
-    inputField.placeholder = 'Type your answer here...';
+    inputField.placeholder = 'Type the reading here...';
 
     // Add a check button
     const checkButton = document.createElement('button');
@@ -43,15 +47,18 @@ function displayExercise() {
     // Assemble the card
     inputContainer.appendChild(inputField);
     inputContainer.appendChild(checkButton);
-    exerciseCard.appendChild(passage);
+    exerciseCard.appendChild(question);
     exerciseCard.appendChild(promptMessage);
     exerciseCard.appendChild(inputContainer);
     exerciseCard.appendChild(resultMessage);
     
+    // Add the finished card to the main container
     exerciseContainer.appendChild(exerciseCard);
     
+    // Automatically focus the input field for a better user experience
     inputField.focus();
 
+    // Listen for the 'Enter' key press on the input field
     inputField.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             checkAnswer();
@@ -65,7 +72,7 @@ function checkAnswer() {
     const inputContainer = document.querySelector('.input-container');
 
     const userAnswer = inputField.value.trim().toLowerCase();
-    const correctAnswer = exercises[currentExerciseIndex].answer.toLowerCase();
+    const correctAnswer = kanjiExercises[currentExerciseIndex].reading;
 
     if (userAnswer === correctAnswer) {
         resultMessage.textContent = 'Correct!';
@@ -87,18 +94,16 @@ function checkAnswer() {
     }
 }
 
-// Get references to HTML elements
-const modalOverlay = document.getElementById('modal-overlay');
-const restartButton = document.getElementById('restart-button');
-
 function nextExercise() {
-     currentExerciseIndex++;
-
-     if (currentExerciseIndex >= exercises.length) {
-        showModal(); // Show the new modal instead of the alert
-     } else {
+    // Move to the next exercise in the list
+    currentExerciseIndex++;
+    
+    // If we've reached the end, show the modal
+    if (currentExerciseIndex >= kanjiExercises.length) {
+        showModal();
+    } else {
         displayExercise();
-     }
+    }
 }
 
 function showModal() {
