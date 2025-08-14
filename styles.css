@@ -52,7 +52,7 @@ header p {
     text-align: center;
 }
 
-/* Main Exercise Container */
+/* Main Exercise Container*/
 #exercise-container {
     max-width: 1050px;
     width: 90%;
@@ -197,4 +197,52 @@ nav a:hover {
 
 #modal-content p {
     margin-bottom: 1.5rem;
+}
+
+/* Virtual Keyboard Styles */
+#keyboard-container {
+    margin-top: 2rem;
+    max-width: 1000px;
+    width: 90%;
+}
+
+#keyboard {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 5px;
+    padding: 10px;
+    background-color: var(--card-background-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.key {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+.key:hover {
+    background-color: #e0e0e0;
+}
+
+.key.space {
+    grid-column: span 3;
+}
+
+.key.backspace {
+    grid-column: span 2;
+    background-color: var(--error-color);
+    color: var(--light-text-color);
+}
+
+.key.backspace:hover {
+    background-color: #c0392b;
 }
