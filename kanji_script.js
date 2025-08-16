@@ -1,5 +1,7 @@
 // A list of Kanji to use for the exercises is defined in kanji_data.js
 let currentExerciseIndex = 0;
+let correctCount = 0;
+let incorrectCount = 0;
 
 // A simple function to shuffle an array
 function shuffleArray(array) {
@@ -9,21 +11,25 @@ function shuffleArray(array) {
     }
 }
 
+function getUniqueExercises(arr) {
+    const uniqueKanji = {};
+    return arr.filter(exercise => {
+        if (!uniqueKanji[exercise.kanji]) {
+            uniqueKanji[exercise.kanji] = true;
+            return true;
+        }
+        return false;
+    });
+}
+
 // Get references to HTML elements from kanji.html
 const exerciseContainer = document.getElementById('exercise-container');
 const modalOverlay = document.getElementById('modal-overlay');
 const restartButton = document.getElementById('restart-button');
 
 function displayExercise() {
-    // Clear any previous exercise content
-    exerciseContainer.innerHTML = '';
-
     // Get the current exercise from our list
     const current = kanjiExercises[currentExerciseIndex];
-
-    // Create the HTML structure for the exercise card
-    const exerciseCard = document.createElement('div');
-    exerciseCard.className = 'exercise-card';
 
     // Add the question (Kanji)
     const question = document.createElement('p');
@@ -32,6 +38,7 @@ function displayExercise() {
 
     // Add the prompt to tell the user what to type
     const promptMessage = document.createElement('p');
+    promptMessage.className = 'prompt-message';
     promptMessage.textContent = current.prompt;
 
     // Add the user input field
@@ -45,6 +52,7 @@ function displayExercise() {
     // Add a check button
     const checkButton = document.createElement('button');
     checkButton.className = 'button';
+    checkButton.id = 'check-button';
     checkButton.textContent = 'Check Answer';
     checkButton.onclick = checkAnswer;
 
@@ -55,14 +63,24 @@ function displayExercise() {
     // Assemble the card
     inputContainer.appendChild(inputField);
     inputContainer.appendChild(checkButton);
-    exerciseCard.appendChild(question);
-    exerciseCard.appendChild(promptMessage);
-    exerciseCard.appendChild(inputContainer);
-    exerciseCard.appendChild(resultMessage);
-    
-    // Add the finished card to the main container
-    exerciseContainer.appendChild(exerciseCard);
-    
+
+    // Create a wrapper for the exercise content that will be cleared
+    const exerciseContentWrapper = document.createElement('div');
+    exerciseContentWrapper.id = 'exercise-content-wrapper';
+    exerciseContentWrapper.appendChild(question);
+    exerciseContentWrapper.appendChild(promptMessage);
+    exerciseContentWrapper.appendChild(inputContainer);
+    exerciseContentWrapper.appendChild(resultMessage);
+
+    // Clear only the previous exercise content, not the score tracker
+    const existingWrapper = document.getElementById('exercise-content-wrapper');
+    if (existingWrapper) {
+        existingWrapper.remove();
+    }
+
+    // Add the new exercise content to the main container
+    exerciseContainer.appendChild(exerciseContentWrapper);
+
     // Automatically focus the input field for a better user experience
     inputField.focus();
 
@@ -74,6 +92,7 @@ function displayExercise() {
     });
 }
 
+// Function to check the user's answer
 function checkAnswer() {
     const inputField = document.getElementById('answer-input');
     const resultMessage = document.getElementById('result');
@@ -82,35 +101,63 @@ function checkAnswer() {
     const userAnswer = inputField.value.trim().toLowerCase();
     const correctAnswer = kanjiExercises[currentExerciseIndex].reading;
 
+    // Disable the 'Check Answer' button to prevent multiple submissions
+    const checkButton = document.getElementById('check-button');
+    if (checkButton) {
+        checkButton.disabled = true;
+    }
+
     if (userAnswer === correctAnswer) {
         resultMessage.textContent = 'Correct!';
         resultMessage.className = 'correct';
-        setTimeout(nextExercise, 1500); 
+        correctCount++;
     } else {
         resultMessage.textContent = `Incorrect. The correct answer was "${correctAnswer}".`;
         resultMessage.className = 'incorrect';
-        
-        // Add a "Next" button when the answer is wrong
-        const nextButton = document.createElement('button');
-        nextButton.className = 'button';
-        nextButton.textContent = 'Next Exercise';
-        nextButton.onclick = nextExercise;
-        inputContainer.appendChild(nextButton);
-        
-        // Disable the original Check Answer button
-        document.querySelector('.input-container .button').disabled = true;
+        incorrectCount++;
     }
+    
+    updateScoreDisplay();
+
+    // Create and add the 'Next Exercise' button
+    const nextButton = document.createElement('button');
+    nextButton.className = 'button next-button'; // Add a unique class to identify it
+    nextButton.textContent = 'Next Exercise';
+    nextButton.onclick = nextExercise;
+    inputContainer.appendChild(nextButton);
 }
 
+function updateScoreDisplay() {
+    const correctDisplay = document.getElementById('correct-count');
+    const incorrectDisplay = document.getElementById('incorrect-count');
+    correctDisplay.textContent = correctCount;
+    incorrectDisplay.textContent = incorrectCount;
+}
+
+// Function to move to the next exercise
 function nextExercise() {
-    // Move to the next exercise in the list
-    currentExerciseIndex++;
+    // Clear the result message and input field
+    document.getElementById('result').textContent = ''; 
+    document.getElementById('result').className = ''; 
+    document.getElementById('answer-input').value = '';
+
+    // Remove the 'Next Exercise' button
+    const nextButton = document.querySelector('.next-button');
+    if (nextButton) {
+        nextButton.remove();
+    }
     
-    // If we've reached the end, show the modal
-    if (currentExerciseIndex >= kanjiExercises.length) {
-        showModal();
-    } else {
+    // Re-enable the 'Check Answer' button
+    const checkButton = document.getElementById('check-button');
+    if (checkButton) {
+        checkButton.disabled = false;
+    }
+
+    currentExerciseIndex++;
+    if (currentExerciseIndex < kanjiExercises.length) {
         displayExercise();
+    } else {
+        showModal();
     }
 }
 
@@ -125,15 +172,20 @@ function hideModal() {
 // Add an event listener to the restart button
 restartButton.addEventListener('click', function() {
     currentExerciseIndex = 0;
+    correctCount = 0;
+    incorrectCount = 0;
     hideModal();
+    const uniqueKanjiExercises = getUniqueExercises(kanjiExercises);
+    shuffleArray(uniqueKanjiExercises);
+    kanjiExercises = uniqueKanjiExercises; // Use the new unique array
     displayExercise();
+    updateScoreDisplay();
 });
 
 // Function to create and render the virtual keyboard
 function createKeyboard() {
     const keyboardContainer = document.getElementById('keyboard');
-    const inputField = document.getElementById('answer-input');
-
+    
     // Mapping for voiced (tenten) and semi-voiced (maru) consonants
     const tentenMap = {
         'か': 'が', 'き': 'ぎ', 'く': 'ぐ', 'け': 'げ', 'こ': 'ご',
@@ -153,6 +205,7 @@ function createKeyboard() {
         key.className = 'key';
         key.textContent = char;
         key.addEventListener('click', () => {
+            const inputField = document.getElementById('answer-input'); // Find the current input field
             inputField.value += char;
             inputField.focus();
         });
@@ -168,6 +221,7 @@ function createKeyboard() {
 
         if (char === '゛') {
             key.addEventListener('click', () => {
+                const inputField = document.getElementById('answer-input'); // Find the current input field
                 const lastChar = inputField.value.slice(-1);
                 if (tentenMap[lastChar]) {
                     inputField.value = inputField.value.slice(0, -1) + tentenMap[lastChar];
@@ -176,6 +230,7 @@ function createKeyboard() {
             });
         } else if (char === '゜') {
             key.addEventListener('click', () => {
+                const inputField = document.getElementById('answer-input'); // Find the current input field
                 const lastChar = inputField.value.slice(-1);
                 if (maruMap[lastChar]) {
                     inputField.value = inputField.value.slice(0, -1) + maruMap[lastChar];
@@ -184,12 +239,14 @@ function createKeyboard() {
             });
         } else if (char === 'っ') {
             key.addEventListener('click', () => {
+                const inputField = document.getElementById('answer-input'); // Find the current input field
                 inputField.value += 'っ';
                 inputField.focus();
             });
         } else if (char === 'Backspace') {
             key.className += ' backspace';
             key.addEventListener('click', () => {
+                const inputField = document.getElementById('answer-input'); // Find the current input field
                 inputField.value = inputField.value.slice(0, -1);
                 inputField.focus();
             });
@@ -200,7 +257,9 @@ function createKeyboard() {
 
 // Start the first exercise and create the keyboard when the page loads
 window.onload = function() {
-    shuffleArray(kanjiExercises);
+    const uniqueKanjiExercises = getUniqueExercises(kanjiExercises);
+    shuffleArray(uniqueKanjiExercises);
+    kanjiExercises = uniqueKanjiExercises; // Use the new unique array
     displayExercise();
     createKeyboard();
 };

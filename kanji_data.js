@@ -1,4 +1,4 @@
-const kanjiExercises = [
+let kanjiExercises = [
     { kanji: '一', reading: 'いち', prompt: 'Type the reading for the Kanji shown above.' },
     { kanji: '二', reading: 'に', prompt: 'Type the reading for the Kanji shown above.' },
     { kanji: '三', reading: 'さん', prompt: 'Type the reading for the Kanji shown above.' },
@@ -69,8 +69,6 @@ const kanjiExercises = [
     { kanji: '東', reading: 'ひがし', prompt: 'Type the reading for the Kanji shown above.' },
     { kanji: '西', reading: 'にし', prompt: 'Type the reading for the Kanji shown above.' },
     { kanji: '車', reading: 'くるま', prompt: 'Type the reading for the Kanji shown above.' },
-    { kanji: '上', reading: 'うえ', prompt: 'Type the reading for the Kanji shown above.' },
-    { kanji: '下', reading: 'した', prompt: 'Type the reading for the Kanji shown above.' },
     { kanji: '犬', reading: 'いぬ', prompt: 'Type the reading for the Kanji shown above.' },
     { kanji: '猫', reading: 'ねこ', prompt: 'Type the reading for the Kanji shown above.' },
 ];
