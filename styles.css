@@ -31,14 +31,14 @@ header {
     align-items: center;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     color: var(--light-text-color);
-    padding: 0.5rem 0.25rem; /* Reduced from 3rem to 2rem */
+    padding: 0.5rem 0.25rem;
     width: 100%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 header h1 {
     font-family: 'Poppins', sans-serif;
-    font-size: 2.5rem; /* Slightly reduced font size */
+    font-size: 2.5rem;
     color: var(--light-text-color);
     font-weight: 700;
     margin-bottom: 0.5rem;
@@ -46,15 +46,15 @@ header h1 {
 
 header p {
     font-family: 'Poppins', sans-serif;
-    font-size: 1.1rem; /* Slightly reduced font size */
+    font-size: 1.1rem;
     color: #f0f0f0;
     max-width: 600px;
     text-align: center;
 }
 
-/* Main Exercise Container*/
+/* Main Exercise Container */
 #exercise-container {
-    position: relative; /* Add this line */
+    position: relative;
     max-width: 1050px;
     width: 90%;
     margin: 2rem auto;
@@ -83,7 +83,7 @@ header p {
 
 .input-container {
     margin-top: 1.5rem;
-    display: flex; /* Use flexbox to keep elements on the same line */
+    display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
@@ -140,7 +140,6 @@ header p {
 }
 
 /* Nav CSS */
-
 nav {
     display: flex;
     justify-content: center;
@@ -170,7 +169,7 @@ nav a:hover {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    display: none; /* Hide by default */
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -195,7 +194,7 @@ nav a:hover {
 }
 
 #modal-overlay.active {
-    display: flex; /* Show when active */
+    display: flex;
 }
 
 #modal-content h3 {
@@ -207,7 +206,7 @@ nav a:hover {
     margin-bottom: 1.5rem;
 }
 
-/* Virtual Keyboard Styles */
+/* --- VIRTUAL KEYBOARD STYLES (UPDATED FOR RESPONSIVENESS) --- */
 #keyboard-container {
     margin-top: 2rem;
     max-width: 1000px;
@@ -216,7 +215,6 @@ nav a:hover {
 
 #keyboard {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
     gap: 5px;
     padding: 10px;
     background-color: var(--card-background-color);
@@ -241,6 +239,10 @@ nav a:hover {
     background-color: #e0e0e0;
 }
 
+#keyboard {
+    grid-template-columns: repeat(10, 1fr);
+}
+
 .key.space {
     grid-column: span 3;
 }
@@ -253,6 +255,49 @@ nav a:hover {
 
 .key.backspace:hover {
     background-color: #c0392b;
+}
+
+/* --- Media Queries for Responsiveness --- */
+/* Small screens (e.g., phones) */
+@media (max-width: 600px) {
+    #keyboard {
+        grid-template-columns: repeat(5, 1fr);
+    }
+    .key.space {
+        grid-column: span 5;
+    }
+    .key.backspace {
+        grid-column: span 1;
+    }
+
+    /* NEW CODE: Change flexbox behavior for small screens */
+    .input-container {
+        flex-direction: column; /* Stack items vertically */
+        align-items: stretch; /* Stretch items to full width */
+        gap: 15px; /* Increase gap for better spacing */
+    }
+
+    #answer-input {
+        width: 100%; /* Make input full width */
+    }
+
+    .button {
+        width: 100%; /* Make buttons full width */
+        margin-left: 0; /* Remove horizontal margin */
+    }
+}
+
+/* Medium screens (e.g., tablets) */
+@media (min-width: 601px) and (max-width: 900px) {
+    #keyboard {
+        grid-template-columns: repeat(8, 1fr);
+    }
+    .key.space {
+        grid-column: span 3;
+    }
+    .key.backspace {
+        grid-column: span 2;
+    }
 }
 
 /* Style and position the score tracker */
@@ -285,11 +330,9 @@ nav a:hover {
 }
 
 /* --- Mock Test Specific Styles --- */
-
-/* Style for the modals (selection and report) */
 .selection-modal,
 .report-modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -304,10 +347,9 @@ nav a:hover {
 
 .selection-modal.active,
 .report-modal.active {
-    display: flex; /* Show the modal when it has the 'active' class */
+    display: flex;
 }
 
-/* Modal Content Box */
 .selection-content,
 .report-content {
     background-color: #fff;
@@ -382,7 +424,7 @@ nav a:hover {
 }
 
 .modal-buttons .button {
-    margin-left: 0; /* Remove the margin on buttons inside the modal-buttons container */
+    margin-left: 0;
 }
 
 .button-secondary {
@@ -413,7 +455,7 @@ nav a:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px; /* Adjust this value as needed to center it vertically */
+    height: 100px;
 }
 
 /* --- Footer Styles --- */
