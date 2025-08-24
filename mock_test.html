@@ -1,0 +1,83 @@
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Kanji Mock Test</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="styles.css">
+        </head>
+        <body>
+    
+            <header>
+                <h1>Kanji Mock Test</h1>
+                <p>Select the kanji you want to be tested on!</p>
+            </header>
+    
+            <nav>
+                <a href="index.html">Hiragana & Katakana Practice</a>
+                <a href="kanji.html">Kanji Practice</a>
+                <a href="mock_test.html">Mock Test</a>
+            </nav>
+    
+            <main id="exercise-container">
+                <!-- The button to open the selection modal -->
+                 <div id="start-button-container">
+                    <button id="select-kanji-button" class="button">Select Kanji for Test</button>
+                </div>
+                <div id="score-tracker">
+                    <p>Correct: <span id="correct-count">0</span></p>
+                    <p>Incorrect: <span id="incorrect-count">0</span></p>
+                </div>
+                <!-- Exercise content will be generated here -->
+            </main>
+    
+            <!-- The Modal for selecting kanji -->
+            <div id="modal-overlay" class="selection-modal">
+                <div id="selection-content" class="selection-content">
+                    <h3>Select Kanji</h3>
+                    <p>Choose the kanji you want to be tested on. All kanji will be selected by default. You can deselect the ones you don't want.</p>
+                    <div id="kanji-selection-list">
+                        <!-- Kanji buttons will be generated here by JavaScript -->
+                    </div>
+                    <div class="modal-buttons">
+                        <button id="select-all-button" class="button">Select All</button>
+                        <button id="select-none-button" class="button">Select None</button>
+                        <button id="start-test-button" class="button">Start Test</button>
+                        <button id="cancel-selection-button" class="button button-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- The Modal for the final report -->
+            <div id="report-modal-overlay" class="report-modal">
+                <div id="report-content" class="report-content">
+                    <h3>Test Results</h3>
+                    <p>You have completed the mock test!</p>
+                    <div id="final-report">
+                        <!-- Report details will be generated here -->
+                    </div>
+                    <button id="close-report-button" class="button">Close</button>
+                </div>
+            </div>
+    
+            <!-- Container for the virtual keyboard -->
+            <div id="keyboard-container">
+                <div id="keyboard"></div>
+            </div>
+
+            <footer>
+                <div class="footer-content">
+                    <p>&copy; 2025 Practice Japanese letters and Characters. All rights reserved.</p>
+                    <p>A fun way to learn and practice Japanese Hiragana, Katakana & especially KANJI!!</p>
+                    <p>Developed by <a href="https://github.com/nisch077" target="_blank" rel="noopener noreferrer">Nischal Nagarkoti</a></p>
+                </div>
+            </footer>
+    
+            <script src="kanji_data.js"></script>
+            <script src="mock_test_script.js"></script>
+        </body>
+    </html>
+    
